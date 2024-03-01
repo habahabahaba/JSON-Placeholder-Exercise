@@ -74,6 +74,9 @@ function showPosts(posts) {
   });
 }
 
+// For checking inputs
+const check = (input) => !!input;
+
 // Fetch and display posts on page load:
 fetchPosts()
   .then((posts) => showPosts(posts))
@@ -83,9 +86,26 @@ fetchPosts()
 addPostBtn.addEventListener('click', (ev) => {
   ev.preventDefault();
 
-  postPost(titleInput.value, bodyInput.value, 0)
+  //   Getting inputs
+  const title = titleInput.value;
+  const body = bodyInput.value;
+
+  // Checking inputs:
+  if (!check(title)) {
+    alert('Please, enter a post title!');
+    return;
+  }
+  if (!check(body)) {
+    alert(
+      'Please, type something (useful) in the post body before adding your post!'
+    );
+    return;
+  }
+
+  // Uploading the new post:
+  postPost(title, body, 0)
+    // Displaying the new post 'optimistically':
     .then((post) => {
-      // adding new post 'optimistically':
       if (post) renderPost(post, postsDiv, 'afterbegin');
     })
     .catch((e) => console.error(e));
