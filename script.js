@@ -75,7 +75,14 @@ function showPosts(posts) {
 }
 
 // For checking inputs
-const check = (input) => !!input;
+const checkInput = (input) => !!input;
+
+// For clearing inputs after submit
+function clearInputs(...args) {
+  args.forEach((inp) => {
+    inp.value &&= '';
+  });
+}
 
 // Fetch and display posts on page load:
 fetchPosts()
@@ -91,22 +98,22 @@ addPostBtn.addEventListener('click', (ev) => {
   const body = bodyInput.value;
 
   // Checking inputs:
-  if (!check(title)) {
+  if (!checkInput(title)) {
     alert('Please, enter a post title!');
     return;
   }
-  if (!check(body)) {
+  if (!checkInput(body)) {
     alert(
       'Please, type something (useful) in the post body before adding your post!'
     );
     return;
   }
-
   // Uploading the new post:
   postPost(title, body, 0)
     // Displaying the new post 'optimistically':
     .then((post) => {
       if (post) renderPost(post, postsDiv, 'afterbegin');
     })
-    .catch((e) => console.error(e));
+    .catch((e) => console.error(e))
+    .finally(clearInputs(titleInput, bodyInput));
 });
